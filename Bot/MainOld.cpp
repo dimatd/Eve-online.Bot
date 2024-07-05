@@ -14,27 +14,27 @@ struct ScrenData
 bool SaveTga(ScrenData& SDt, const char* url)
 {
 	//
-   // Теперь нужно записать полученные данные в файл Screen.tga.
+   // РўРµРїРµСЂСЊ РЅСѓР¶РЅРѕ Р·Р°РїРёСЃР°С‚СЊ РїРѕР»СѓС‡РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ РІ С„Р°Р№Р» Screen.tga.
    //
 
-	FILE* sFile = 0;        // Дескриптор файла
+	FILE* sFile = 0;        // Р”РµСЃРєСЂРёРїС‚РѕСЂ С„Р°Р№Р»Р°
 
-	// Обьявляем переменные, которые понадобятся нам в дальнейшем:
+	// РћР±СЊСЏРІР»СЏРµРј РїРµСЂРµРјРµРЅРЅС‹Рµ, РєРѕС‚РѕСЂС‹Рµ РїРѕРЅР°РґРѕР±СЏС‚СЃСЏ РЅР°Рј РІ РґР°Р»СЊРЅРµР№С€РµРј:
 	unsigned char tgaHeader[12] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	unsigned char header[6];
 	unsigned char tempColors = 0;
 
-	// Открываем файл скриншота
+	// РћС‚РєСЂС‹РІР°РµРј С„Р°Р№Р» СЃРєСЂРёРЅС€РѕС‚Р°
 	fopen_s(&sFile, url, "wb");
 
-	// Проверяем, правильно ли произошло открытие
+	// РџСЂРѕРІРµСЂСЏРµРј, РїСЂР°РІРёР»СЊРЅРѕ Р»Рё РїСЂРѕРёР·РѕС€Р»Рѕ РѕС‚РєСЂС‹С‚РёРµ
 	if(!sFile) {
 		return 0;
 	}
 
 
 
-	// Записываем ширину и высоту:
+	// Р—Р°РїРёСЃС‹РІР°РµРј С€РёСЂРёРЅСѓ Рё РІС‹СЃРѕС‚Сѓ:
 	header[0] = SDt.ScreenWidth % 256;
 	header[1] = SDt.ScreenWidth / 256;
 	header[2] = SDt.ScreenHeigh % 256;
@@ -42,15 +42,15 @@ bool SaveTga(ScrenData& SDt, const char* url)
 	header[4] = 24;
 	header[5] = 0;
 
-	// Записываем хидеры в начало файла:
+	// Р—Р°РїРёСЃС‹РІР°РµРј С…РёРґРµСЂС‹ РІ РЅР°С‡Р°Р»Рѕ С„Р°Р№Р»Р°:
 	fwrite(tgaHeader, sizeof(tgaHeader), 1, sFile);
 	fwrite(header, sizeof(header), 1, sFile);
-	// Записываем данные изображения:
+	// Р—Р°РїРёСЃС‹РІР°РµРј РґР°РЅРЅС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ:
 	fwrite(SDt.ImageBuffer, SDt.ScreenWidth * SDt.ScreenHeigh * 3, 1, sFile);
 
-	// Закрываем файл
+	// Р—Р°РєСЂС‹РІР°РµРј С„Р°Р№Р»
 	fclose(sFile);
-	// Удаляем ненужные теперь данные
+	// РЈРґР°Р»СЏРµРј РЅРµРЅСѓР¶РЅС‹Рµ С‚РµРїРµСЂСЊ РґР°РЅРЅС‹Рµ
 
 	return 1;
 
@@ -80,8 +80,8 @@ int main()
 	BITMAPINFO BMI;
 	BMI.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	BMI.bmiHeader.biWidth = SDt.ScreenWidth;
-	BMI.bmiHeader.biHeight = SDt.ScreenHeigh; // Отрицательное значение высоты, чтобы изображение не было перевёрнутым
-	BMI.bmiHeader.biSizeImage = SDt.ScreenWidth * SDt.ScreenHeigh * 3; // Ширина * Высота * Количество_цветов_на_пиксель
+	BMI.bmiHeader.biHeight = SDt.ScreenHeigh; // РћС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РІС‹СЃРѕС‚С‹, С‡С‚РѕР±С‹ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РЅРµ Р±С‹Р»Рѕ РїРµСЂРµРІС‘СЂРЅСѓС‚С‹Рј
+	BMI.bmiHeader.biSizeImage = SDt.ScreenWidth * SDt.ScreenHeigh * 3; // РЁРёСЂРёРЅР° * Р’С‹СЃРѕС‚Р° * РљРѕР»РёС‡РµСЃС‚РІРѕ_С†РІРµС‚РѕРІ_РЅР°_РїРёРєСЃРµР»СЊ
 	BMI.bmiHeader.biCompression = BI_RGB;
 	BMI.bmiHeader.biBitCount = 24;
 	BMI.bmiHeader.biPlanes = 1;
