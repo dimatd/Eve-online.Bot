@@ -56,7 +56,7 @@ using namespace Gdiplus; /* как хочешь, но мне не в кайф постоянно писать Gdiplu
 #pragma comment(lib, "Dwmapi.lib")
 
 
-void MakeScreenShot()
+void MakeScreenShot(RECT& wrect)
 {
 	//Sleep(2000);
 
@@ -78,7 +78,7 @@ void MakeScreenShot()
 	std::string ClassName("trinityWindow");
 	auto EveWin = FindWindowA(ClassName.c_str(), nullptr);
 
-	RECT wrect;
+	//RECT wrect;
 	DwmGetWindowAttribute(EveWin, DWMWA_EXTENDED_FRAME_BOUNDS, &wrect, sizeof(wrect));
 
 	Width = wrect.right - wrect.left;
@@ -86,8 +86,16 @@ void MakeScreenShot()
 
 	auto CurrentWindows = GetForegroundWindow();
 
+	Sleep(500);
+
+	if(IsIconic(EveWin))
+	{
+		ShowWindow(EveWin, SW_SHOWNORMAL);
+		Sleep(500);
+	}
+
 	SetForegroundWindow(EveWin);
-	Sleep(100);
+	Sleep(300);
 
 	//ReturnDrons();
 
@@ -100,8 +108,37 @@ void MakeScreenShot()
 	hBitmap = (HBITMAP)SelectObject(memdc, membit);
 	Gdiplus::Bitmap bitmap(hBitmap, NULL);
 	bitmap.Save(L"Data/screen.png", &png);
+	//bitmap.
 
 	DeleteObject(hBitmap);
 
 	SetForegroundWindow(CurrentWindows);
+}
+
+void ActiveWindows()
+{
+	std::string ClassName("trinityWindow");
+	auto EveWin = FindWindowA(ClassName.c_str(), nullptr);
+
+	auto CurrentWindows = GetForegroundWindow();
+
+	Sleep(200);
+
+	if(IsIconic(EveWin))
+	{
+		ShowWindow(EveWin, SW_SHOWNORMAL);
+		Sleep(500);
+	}
+
+	SetForegroundWindow(EveWin);
+	Sleep(300);
+}
+
+void MinimaizeWindows()
+{
+	std::string ClassName("trinityWindow");
+	auto EveWin = FindWindowA(ClassName.c_str(), nullptr);
+
+	auto CurrentWindows = GetForegroundWindow();
+	ShowWindow(CurrentWindows, SW_MINIMIZE);
 }
