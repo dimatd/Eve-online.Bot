@@ -19,6 +19,8 @@ using namespace cv;
 #include <iostream>
 #include <string>
 #include <dwmapi.h>
+#include "Bot_v1.h"
+
 using namespace std;
 using namespace cv;
 
@@ -80,9 +82,30 @@ Mat hwnd2mat()
 }
 
 
+void checkOverview(const cv::Mat& Overview)
+{
+	cv::imshow("Overview", Overview);
+	cv::moveWindow("Overview", 0, 0);
+
+	cv::Mat FoundOverview = Overview.clone();
+
+	cv::cvtColor(FoundOverview, FoundOverview, cv::COLOR_BGRA2GRAY);
+	cv::inRange(FoundOverview, Scalar(0, 0, 0), Scalar(30, 0, 0), FoundOverview);
+
+
+	cv::imshow("FoundOverview", FoundOverview);
+	cv::moveWindow("FoundOverview", 150, 0);
+
+}
+
 int main(int argc, char** argv)
 {
+	RunBot_v1();
+	//RunBot_v2();
+	return 1;
+
 	ActiveWindows();
+
 
 	//int Height, Width;
 
@@ -113,7 +136,8 @@ int main(int argc, char** argv)
 
 	cv::cvtColor(image, image, cv::COLOR_BGRA2GRAY);
 
-
+	//cv::imshow("Input Image 1", image);
+	//cv::moveWindow("Input Image 1", 0, 0);
 
 	cv::inRange(image, Scalar(0, 0, 0), Scalar(30, 0, 0), image);
 	//cv::threshold(image, image, 128, 255, ThresholdTypes::THRESH_BINARY);
@@ -129,16 +153,12 @@ int main(int argc, char** argv)
 	colors[0] = cv::Scalar(255, 0, 0);
 	colors[1] = cv::Scalar(0, 255, 0);
 	colors[2] = cv::Scalar(0, 0, 255);
+
+	vector<Rect> FoundRect;
+
 	for(size_t idx = 0; idx < contours.size(); idx++)
 	{
 		auto contour = contours[idx];
-		/*if(contour.size() != 4)
-		{
-			continue;
-		}
-		*/
-
-		//cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
 
 		auto rect = cv::minAreaRect(contour); // пытаемся вписать прямоугольник
 
@@ -147,27 +167,34 @@ int main(int argc, char** argv)
 
 		if(10000 < Rect2.width * Rect2.height)
 		{
-			rectangle(image2, Rect2, colors[idx % 3], 2);
+			FoundRect.push_back(Rect2);
+
+			//rectangle(image2, Rect2, colors[idx % 3], 2);
 		}
-
-
-
-		//Mat boxPts;
-		//cv::boxPoints(rect, boxPts);
-		
-		//cv::rectangle(image, rect., p2,
-		//	Scalar(255, 0, 0),
-		//	thickness, LINE_8);
-		//	//box = np::int0(box) # округление координат
-		//cv::drawContours(contourImage, boxPts, 0, colors[idx % 3]); // рисуем прямоугольник
 	}
 
-	//cv::imshow("Input Image", image);
-	//cv::moveWindow("Input Image", 0, 0);
+	sort(FoundRect.begin(), FoundRect.end(), [](const Rect& A, const Rect& B){ return A.width * A.height > B.width * B.height; });
 
-	cv::imshow("Contours", image2);
-	cv::moveWindow("Contours", 0, 0);
-	//cv::waitKey(0);
+	cv::Mat FoundRects = image2.clone();
+
+	size_t idx = 0;
+	for(auto& Rect : FoundRect)
+	{
+		rectangle(FoundRects, Rect, colors[idx % 3], 2);
+		idx++;
+
+		if(idx > 2)
+		{
+			break;
+		}
+	}
+
+	cv::Mat Overview(image2, FoundRect[0]);
+
+	checkOverview(Overview);
+
+	//cv::imshow("FoundRects", FoundRects);
+	//cv::moveWindow("FoundRects", 0, 0);
 
 	MinimaizeWindows();
 

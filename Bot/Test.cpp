@@ -120,9 +120,7 @@ void ActiveWindows()
 	std::string ClassName("trinityWindow");
 	auto EveWin = FindWindowA(ClassName.c_str(), nullptr);
 
-	auto CurrentWindows = GetForegroundWindow();
-
-	Sleep(200);
+	//Sleep(200);
 
 	if(IsIconic(EveWin))
 	{
@@ -138,7 +136,5 @@ void MinimaizeWindows()
 {
 	std::string ClassName("trinityWindow");
 	auto EveWin = FindWindowA(ClassName.c_str(), nullptr);
-
-	auto CurrentWindows = GetForegroundWindow();
-	ShowWindow(CurrentWindows, SW_MINIMIZE);
+	ShowWindow(EveWin, SW_MINIMIZE);
 }
