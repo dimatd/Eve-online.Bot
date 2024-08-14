@@ -97,7 +97,7 @@ void MoveToMission()
 void EndMission()
 {
 	std::cout << "End mission" << std::endl;
-	Sleep(1000*15);
+	Sleep(1000*20);
 	leftclick(215, 436);
 	Sleep(1000*5);
 	leftclick(283, 643);
@@ -129,18 +129,42 @@ void MoveToFistTarget()
 	UpKey('Q');
 }
 
-void Mining()
+void MoveToOrbit()
 {
-	std::cout << "Start Mining" << std::endl;
+	DownKey('W');
+	Sleep(100);
+	leftclick(747, 261);
+	Sleep(100);
+	UpKey('W');
+}
 
-	MoveToFistTarget();
-	PressKey(VK_F3);
-
+void LaunchDrones()
+{
 	DownKey(VK_SHIFT);
 	DownKey('F');
 	Sleep(100);
 	UpKey(VK_SHIFT);
 	UpKey('F');
+}
+
+void CollectDrones()
+{
+	DownKey(VK_SHIFT);
+	DownKey('R');
+	Sleep(100);
+	UpKey(VK_SHIFT);
+	UpKey('R');
+}
+
+void Mining()
+{
+	std::cout << "Start Mining" << std::endl;
+
+	MoveToFistTarget();
+	MoveToOrbit();
+	//PressKey(VK_F3);
+
+	LaunchDrones();
 
 	Sleep(15000);
 
@@ -153,30 +177,33 @@ void Mining()
 		//leftclick(1588, 307);
 		StopTargiting();
 
-		MoveToFistTarget();
+		//MoveToFistTarget();
+
 
 		Sleep(3000);
 		//PressKey('F');
 
-		PressKey(VK_F3);
+		//PressKey(VK_F3);
 		PressKey(VK_F1);
 		PressKey(VK_F2);
 
 		Sleep(1000 * 60 * 4);
 		Sleep(4000);
+
+		MoveToOrbit();
+		Sleep(3000);
 	}
 
-	DownKey(VK_SHIFT);
-	DownKey('R');
-	Sleep(100);
-	UpKey(VK_SHIFT);
-	UpKey('R');
+	CollectDrones();
 }
 
 void RunBot_v1()
 {
 	ActiveWindows();
 	Sleep(1000);
+
+	//EndMission();
+	//return;
 
 	for(int i = 0; i < 10000000000; i++)
 	{

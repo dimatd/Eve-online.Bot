@@ -20,6 +20,9 @@ using namespace cv;
 #include <string>
 #include <dwmapi.h>
 #include "Bot_v1.h"
+#include "Log.h"
+#include "TimerManager.h"
+#include "Bot_v2.h"
 
 using namespace std;
 using namespace cv;
@@ -98,10 +101,15 @@ void checkOverview(const cv::Mat& Overview)
 
 }
 
+
+
+
 int main(int argc, char** argv)
 {
-	RunBot_v1();
+	//RunBot_v1();
 	//RunBot_v2();
+
+	RunBot_v3();
 	return 1;
 
 	ActiveWindows();
